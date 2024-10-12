@@ -1,0 +1,21 @@
+{
+  "name": "html-markup-transformer",
+  "version": "1.0.0",
+  "description": "A CLI tool for transforming HTML files with embedded JavaScript into markup language",
+  "main": "bin/cli.js",
+  "bin": {
+    "htmd": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node bin/cli.js"
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "html-to-md": "^0.8.6",
+    "path": "^0.12.7",
+    "puppeteer": "^23.5.3"
+  }
+}
