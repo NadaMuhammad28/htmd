@@ -1,30 +1,19 @@
 const fs = require('fs-extra');
 const path = require('path');
-const htmlToMd = require('html-to-md');
+const { turndownService } = require('./turndown');
+const { inlineStyles, removeStyleTags } = require('./transformStyles');
+const { removeScriptTags } = require('./removeScript');
 
-// Function to remove <style> tags after applying inline styles
-async function removeStyleTags(page) {
-  await page.evaluate(() => {
-    const styleTags = document.querySelectorAll('style');
-    styleTags.forEach((styleTag) => styleTag.remove());
-  });
-}
-
-// Function to remove <script> tags after execution
-async function removeScriptTags(page) {
-  await page.evaluate(() => {
-    const scriptTags = document.querySelectorAll('script');
-    scriptTags.forEach((scriptTag) => scriptTag.remove());
-  });
-}
-
+// Process HTML with Puppeteer to ensure styles and scripts are handled
 async function processHtmlWithPuppeteer(page, htmlContent) {
-  await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' }); // Optimized waitUntil
+  await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
+  await inlineStyles(page); // Apply inline styles
   await removeStyleTags(page);
   await removeScriptTags(page);
   return page.content();
 }
 
+// Main conversion function
 const convertHtmlToMd = async (
   browser,
   htmlFilePath,
@@ -34,27 +23,24 @@ const convertHtmlToMd = async (
   try {
     const fileName = path.basename(htmlFilePath, '.html');
     await fs.ensureDir(outputDir);
-
-    // File paths
+    // File path
     const mdFilePath = path.join(outputDir, `${fileName}.md`);
     const htmlContent = await fs.readFile(htmlFilePath, 'utf-8');
 
     let processedHtml = htmlContent;
-    if (htmlContent.includes('<script') || htmlContent.includes('<style')) {
-      // Open a new Puppeteer page if the file contains scripts or styles
+    if (processedHtml.includes('<script') || processedHtml.includes('<style')) {
       const page = await browser.newPage();
       try {
-        processedHtml = await processHtmlWithPuppeteer(page, htmlContent);
+        processedHtml = await processHtmlWithPuppeteer(page, processedHtml);
       } finally {
-        // Ensure the page is closed after processing
         await page.close();
       }
     }
 
-    // Convert HTML to Markdown
-    const markdownContent = htmlToMd(processedHtml);
-    await fs.writeFile(mdFilePath, markdownContent, 'utf-8'); // Write Markdown file
-
+    // Convert HTML to Markdown using Turndown
+    const markdownContent = turndownService.turndown(processedHtml);
+    // Write the converted Markdown file
+    await fs.writeFile(mdFilePath, markdownContent, 'utf-8');
     // Optionally generate the processed HTML file
     if (generateHtmlFile) {
       const htmlOutputDir = path.join(outputDir, 'html');

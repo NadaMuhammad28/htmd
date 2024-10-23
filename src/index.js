@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const puppeteer = require('puppeteer');
 const path = require('path');
-const { convertHtmlToMd } = require('./utils/transform');
+const { convertHtmlToMd } = require('./utils');
 
 async function validateInputDirectory(inputDir) {
   const isDirExists = await fs.exists(inputDir);
