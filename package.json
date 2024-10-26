@@ -9,7 +9,29 @@
   "scripts": {
     "start": "node bin/cli.js"
   },
-  "keywords": [],
+  "keywords": [
+    "CLI",
+    "HTML",
+    "html-to-md",
+    "turndown",
+    "markup",
+    "markup language",
+    "HTML to markup",
+    "HTML to Markdown",
+    "HTML to Markdown CLI",
+    "HTML to Markdown converter",
+    "Markdown",
+    "JavaScript execution",
+    "HTML transformation",
+    "Markdown conversion",
+    "HTML to Markdown CLI",
+    "Puppeteer",
+    "HTML markup transformer",
+    "file processing",
+    "documentation generator",
+    "batch conversion",
+    "HTML processing"
+  ],
   "author": "",
   "dependencies": {
     "commander": "^12.1.0",

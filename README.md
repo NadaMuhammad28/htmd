@@ -8,7 +8,7 @@
 - Option to generate processed HTML files after JavaScript execution using Puppeteer.
 - Processes entire directories of HTML files.
 
-<!-- ## Installation
+## Installation
 
 1. Clone this repository or install it globally via npm:
 
@@ -20,7 +20,7 @@
 
    ```bash
    npm install
-   ``` -->
+   ```
 
 ## Usage
 
